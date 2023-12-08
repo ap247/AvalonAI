@@ -8,7 +8,7 @@ def main():
     startgame()
 
 def startgame():
-    num_players = 4 # num of ai players not including user
+    num_players = 5 # num of ai players not including user
     random_val = random.choice([True, False])
     user_val = not random_val
     player_roles = [True, True, True, False, random_val]
@@ -32,7 +32,7 @@ def startgame():
     name = input()
 
     print(f"""
-    Alright, ${name}. You will be playing with five other players: Alice, Beau, Conne, David, and Emily. 
+    Alright, {name}. You will be playing with five other players: Alice, Beau, Conne, David, and Emily. 
     You will randomly be assigned the role of servant or minion. As a servant, you want every round to 
     succeed and minion visa-versa. Every round, one player will nominate a group of players to go on a
     mission. Players can either pass or fail a mission. Each player can publicallly vote for or against 
@@ -40,13 +40,16 @@ def startgame():
     fail the mission. Just one vote can fail the mission. 
     """)
 
-    print(f"You will play as a ${'Servant' if user_val else 'Minion'}")
+    print(f"You will play as a {'Servant' if user_val else 'Minion'}")
 
-    #for i in range(0, num_players):
+    for i in range(0, num_players):
+        response = continue_chat_round(player_list[i].chat_id, 1)
+
+        print(response.choices[0].message.content)
     
 
 def start_chat(name, role):
-    init_prompt_text = f"We are starting a game of Avalon as ${name} and you will play as a ${'Servant' if role else 'Minion'}. You will stay in character as ${name} for any response to questions."  
+    init_prompt_text = f"We are starting a game of Avalon as {name} and you will play as a {'Servant' if role else 'Minion'}. You will stay in character as ${name} for any response to questions."  
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -62,7 +65,7 @@ def continue_chat_round(chat_id, round_num):
         messages=[
             {"role": "system", "content": second_prompt_text}
         ],
-        context=chat_id
+        id=chat_id
     )
     return response 
 
