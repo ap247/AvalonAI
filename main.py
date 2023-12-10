@@ -1,4 +1,4 @@
-from openai import OpenAI
+from openai import OpenAI # type: ignore
 import random
 from character import Character
 client = OpenAI()
