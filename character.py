@@ -12,3 +12,9 @@ class Character:
 
     def set_chat_id(self, chat_id):
         self.chat_id = chat_id
+
+    def set_assistant_id(self, assistant_id):
+        self.assistant_id = assistant_id
+    
+    def set_thread_id(self, thread_id):
+        self.thread_id = thread_id
