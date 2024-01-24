@@ -44,7 +44,18 @@ fail the mission. Just one vote can fail the mission.""")
 
     for i in range(0, num_players):
         create_message_round(player_list[i].thread_id, 1)
-        print(run_thread(player_list[i].thread_id, player_list[i].assistant_id))
+        cur_run = run_thread(player_list[i].thread_id, player_list[i].assistant_id)
+
+        while cur_run.status != "completed":
+            keep_retrieving_run = client.beta.threads.runs.retrieve(
+                thread_id=player_list[i].thread_id,
+                run_id=cur_run.id
+            )
+            print(f"Run status: {keep_retrieving_run.status}")
+
+            if keep_retrieving_run.status == "completed":
+                print("\n")
+                break
 
         thread_messages = client.beta.threads.messages.list(player_list[i].thread_id)
         print(thread_messages.data)
