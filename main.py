@@ -34,16 +34,22 @@ def startgame():
     name = input()
 
     print(f"""Alright, {name}. You will be playing with five other players: Alice, Beau, Conne, David, and Emily. 
-    You will randomly be assigned the role of servant or minion. As a servant, you want every round to 
-    succeed and minion visa-versa. Every round, one player will nominate a group of players to go on a
-    mission. Players can either pass or fail a mission. Each player can publicallly vote for or against 
-    the nomination. If a majority vote for, then each player nominated makes a private vote to pass or 
-    fail the mission. Just one vote can fail the mission.""")
+You will randomly be assigned the role of servant or minion. As a servant, you want every round to 
+succeed and minion visa-versa. Every round, one player will nominate a group of players to go on a
+mission. Players can either pass or fail a mission. Each player can publicallly vote for or against 
+the nomination. If a majority vote for, then each player nominated makes a private vote to pass or 
+fail the mission. Just one vote can fail the mission.""")
 
     print(f"You will play as a {'Servant' if user_val else 'Minion'}")
 
     for i in range(0, num_players):
         create_message_round(player_list[i].thread_id, 1)
+        print(run_thread(player_list[i].thread_id, player_list[i].assistant_id))
+
+        thread_messages = client.beta.threads.messages.list(player_list[i].thread_id)
+        print(thread_messages.data)
+
+
         
 
     
@@ -82,8 +88,8 @@ You will stay in character as {name} for any response to questions. Don't use re
 Respond with modern social dynamics. Respond with {name}'s response in quotes."""  
     
     assistant = client.beta.assistants.create(
+        instructions=init_prompt_text,
         name=f"Avalon Player {name}",
-        description=init_prompt_text,
         model="gpt-4"
     )
     return assistant
@@ -106,6 +112,7 @@ def run_thread(cur_thread_id, cur_assistant_id):
         thread_id=cur_thread_id,
         assistant_id=cur_assistant_id
     )
+    return run
 
 
 
